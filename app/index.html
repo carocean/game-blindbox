@@ -1,0 +1,87 @@
+<div class="index">
+    <div><a href="/pages/test">测试合约</a></div>
+    <div artifactor><a href="#">生成合约制品</a></div>
+    <div style="margin-top: 80px;" wallet>
+        <p connector style="cursor: pointer;">连接钱包</p>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.1-alpha.5/web3.min.js"
+    integrity="sha512-NfffVWpEqu1nq+658gzlJQilRBOvjs+PhEKSjT9gkQXRy9OfxI2TOXr33zS7MgGyTpBa5qtC6mKJkQGd9dN/rw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function () {
+        $('div[artifactor]').on('click', function () {
+            $.get('/pages/artifactor', function (data) {
+                console.log(data);
+            });
+        });
+
+        $('div[wallet]>p[connector]').click(async function () {
+            const web3 = new Web3(window.ethereum);
+            // await window.ethereum.request({ method: "eth_requestAccounts" });
+            const accounts = await web3.eth.getAccounts();
+            for (var index in accounts) {
+                var element = accounts[index];
+                $('div[wallet]').append("<p from>" + element + "</p>");
+                const from = element;
+                $('div[wallet]').append("<p style='padding-left:40px;'>from:" + from + "</p>");
+                const balanceInWei = await web3.eth.getBalance(from);
+                $('div[wallet]').append("<p style='padding-left:40px;'>balanceInWei:" + balanceInWei + "</p>");
+                const balanceInEth = web3.utils.fromWei(balanceInWei, "ether");
+                $('div[wallet]').append("<p style='padding-left:40px;'>balanceInEth:" + balanceInEth + "</p>");
+                const gasPriceInWei = await web3.eth.getGasPrice();
+                $('div[wallet]').append("<p style='padding-left:40px;'>gasPriceInWei:" + gasPriceInWei + "</p>");
+                const gasPriceInGWei = await web3.utils.fromWei(gasPriceInWei, "gwei");
+                $('div[wallet]').append("<p style='padding-left:40px;'>gasPriceInGWei:" + gasPriceInGWei + "</p>");
+                $('div[wallet]').append("<p style='padding-left:40px;' to><input type='text' placeholder='输入对方账号'></p>");
+                $('div[wallet]').append("<p style='padding-left:40px;' amount><input type='text' placeholder='输入金额，单位ether'></p>");
+                $('div[wallet]').append("<p style='padding-left:40px;' send><input type='button' value='发送'></p>");
+                $('div[wallet]').append("<p style='padding-left:40px;' nonce><input type='text' placeholder='输入任意串nonce'></p>");
+                $('div[wallet]').append("<p style='padding-left:40px;' sign><input type='button' value='签名'></p>");
+            }
+
+        });
+        $('div[wallet]').delegate('p[sign] input', 'click', async function () {
+            const web3 = new Web3(window.ethereum);
+            var from = $(this).parents('p').siblings('p[from]').html();
+            var nonce = $(this).parents('p').siblings('p[nonce]').children('input').val();
+            var text = web3.utils.keccak256("\x19Ethereum Signed Message:\n" + web3.utils.utf8ToHex(nonce));
+            try {
+                //因为账号from是公钥，服务器端可以此验签
+                var sign = await web3.eth.sign(text, from);
+                console.log("Transaction result:", sign);
+                $(this).parents('p').append("<p style='padding-left:40px;color:green;'>Transaction sent successfully. sign:" + sign + "</p>");
+            } catch (err) {
+                $(this).parents('p').append("<p style='padding-left:40px;color:red;'>Failed to send transaction:" + err + "</p>");
+                console.error("Failed to send transaction:", err);// Update status
+            }
+        });
+        $('div[wallet]').delegate('p[send] input', 'click', async function () {
+            const web3 = new Web3(window.ethereum);
+            var from = $(this).parents('p').siblings('p[from]').html();
+            var to = $(this).parents('p').siblings('p[to]').children('input').val();
+            var amount = $(this).parents('p').siblings('p[amount]').children('input').val();
+            if (to == '' || amount == '') {
+                alert('to or amount is null.');
+                return;
+            }
+            const amountWei = web3.utils.toWei(amount, "ether");
+            const transaction = {
+                from: from,
+                to: to,
+                value: amountWei,
+            };
+            // Send the transaction
+            try {
+                const result = await web3.eth.sendTransaction(transaction);
+                console.log("Transaction result:", result);
+                $(this).parents('p').append("<p style='padding-left:40px;color:green;'>Transaction sent successfully</p>");
+            } catch (err) {
+                // Handle error
+                $(this).parents('p').append("<p style='padding-left:40px;color:red;'>Failed to send transaction:" + err + "</p>");
+                console.error("Failed to send transaction:", err);// Update status
+            }
+        })
+    });
+
+</script>

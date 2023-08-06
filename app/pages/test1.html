@@ -1,0 +1,28 @@
+<div test>
+    <input placeholder="输入test的值，回撤" value="0">
+    <br />
+    <div test2><input type="button" value="测试合约2"></div>
+    <label>测试结果</label>
+    <p>:</p>
+</div>
+<script>
+    $(document).ready(function () {
+        $('input').keyup(function (e) {
+            if (e.keyCode == 13) {
+                var val = $('input').val();
+                $.get('/pages/test1?value=' + val, function (data) {
+                    $('input').val(data);
+                    $('p').html(data);
+                });
+            }
+        });
+        $('div[test2] input').click(function () {
+            var val = $('input').val();
+            $.get('/pages/test2?value=' + val, function (data) {
+                $('input').val(data);
+                $('p').html(data);
+            });
+        })
+    });
+
+</script>
