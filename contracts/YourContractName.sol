@@ -2,7 +2,7 @@
 pragma solidity >=0.4.22 <0.8.20;
 
 contract YourContractName {
-  constructor()public{
+  constructor(){
     
   }
   event Log(uint256 v);

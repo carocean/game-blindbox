@@ -1,0 +1,45 @@
+.blindbox{
+    text-align: center;
+    margin-top: 50px;
+}
+.blindbox ul{
+    padding: 0;
+    margin: 0;
+}
+.blindbox ul>li{
+    list-style-type: none;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.bb-create{
+    min-width: 400px;
+    max-width: 400px;
+    margin: 0 auto;
+    border: 1px solid grey;
+}
+.bb-use{
+    margin-top: 20px;
+}
+.bb-use .bb-tt{
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+}
+.bb-details{
+    padding: 0px 20px;
+    font-size: 12px;
+    text-align: left;
+    display: inline-block;
+}
+.bb-details>li{
+    padding: 10px 0 !important;
+}
+.bb-use{
+    
+}
+.bb-ul{
+    padding: 0 40px !important;
+    text-align: left;
+    margin-left: 0 !important;
+}

@@ -1,0 +1,76 @@
+<div class="blindbox">
+    <div class="bb-create">
+        <ul class="bb-form">
+            <li selector><select name="account-selector">
+                    <option value=""></option>
+                </select></li>
+            <li lucky><input placeholder="输入盲盒幸运数个数"></li>
+            <li req><a href='#'>申请创建盲盒</a></li>
+        </ul>
+        <ul class="bb-details"></ul>
+    </div>
+
+    <div class="bb-use">
+        <p class="bb-tt">盲盒列表</p>
+        <ul class="bb-ul">
+            <li class="bb-li">
+
+            </li>
+        </ul>
+    </div>
+</div>
+<link href="/css/blindbox.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.1-alpha.5/web3.min.js"
+    integrity="sha512-NfffVWpEqu1nq+658gzlJQilRBOvjs+PhEKSjT9gkQXRy9OfxI2TOXr33zS7MgGyTpBa5qtC6mKJkQGd9dN/rw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(async function () {
+        const web3 = new Web3(window.ethereum);
+
+        var currentAccount;
+        var accounts = await web3.eth.requestAccounts();
+        var selector = $('.bb-form li[selector] select');
+        selector.empty();
+        for (var i = 0; i < accounts.length; i++) {
+            var a = accounts[i];
+            if (i == 0) {
+                currentAccount = a;
+            }
+            selector.append("<option value='" + a + "'>" + a + "</option>");
+        }
+
+        selector.change(async function () {
+            var val = $(this).val();
+            currentAccount = val;
+        });
+
+        $('.bb-form li[req]').click(function () {
+            var val = $('.bb-form li[lucky] input').val();
+            if (val == '' || typeof val == 'undefined') {
+                alert('空');
+            }
+            $.get('/api/blindbox.create', { dealer: currentAccount, luckyCount: val }, function (data) {
+                var obj = JSON.parse(data);
+                $('.bb-details').append("<li>" + obj.contractAddress + "</li>");
+                refreshList();
+            }).error(function (e) {
+                alert(e);
+            });
+        })
+
+        function refreshList() {
+            $('.bb-ul').empty();
+            $.get('/api/blindbox.dealers', {}, function (data) {
+                console.log(data);
+                var arr = JSON.parse(data);
+                for (var i = 0; i < arr.length; i++) {
+                    var address = arr[i];
+                    $('.bb-ul').append("<li>" + i + ': ' + address + "</li>");
+                }
+            }).error(function (e) {
+                alert(e);
+            });
+        }
+        refreshList();
+    });
+</script>

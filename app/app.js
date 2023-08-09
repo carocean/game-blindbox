@@ -81,7 +81,7 @@ http.createServer(async (req, res) => {
   const part = $(partDom.window);
   const layout = $(layoutDom.window);
   layout('head').append(part('script'));
-  layout('link').append(part('link'));
+  layout('head').append(part('link'));
   // res.write('<!DOCTYPE html>');
   try {
     await page(req, res, layout, part);
@@ -124,6 +124,7 @@ const callApi = async function (uri, req, res) {
   var url = '.' + path +'/'+ fnWithoutExt + '.js';
   try {
     var api = require(url);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
     await api[ext](req, res);
     res.statusCode = 200;
     res.statusMessage = 'ok';

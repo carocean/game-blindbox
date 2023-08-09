@@ -1,8 +1,13 @@
 <div class="index">
-    <div><a href="/pages/test">测试合约</a></div>
-    <div artifactor><a href="#">生成合约制品</a></div>
+    <div style="padding: 20px 0px 20px 0px;"><a href="/pages/test">测试合约</a></div>
+    <div style="padding: 20px 0px 20px 0px;"><a href="/pages/blindbox/index">盲盒合约</a></div>
+    <div artifactor style="padding: 20px 0px 20px 0px;"><a href="#">生成合约制品</a></div>
     <div style="margin-top: 80px;" wallet>
         <p connector style="cursor: pointer;">连接钱包</p>
+    </div>
+    <div style="margin-top: 80px;" tx>
+        <p url><input placeholder="输入私有链地址，空为查metemask。"></p>
+        <p view style="cursor: pointer;">查看交易</p>
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.1-alpha.5/web3.min.js"
@@ -38,6 +43,7 @@
                 $('div[wallet]').append("<p style='padding-left:40px;' send><input type='button' value='发送'></p>");
                 $('div[wallet]').append("<p style='padding-left:40px;' nonce><input type='text' placeholder='输入任意串nonce'></p>");
                 $('div[wallet]').append("<p style='padding-left:40px;' sign><input type='button' value='签名'></p>");
+                $('div[wallet]').append("<p style='padding-left:40px;' transactions from='"+from+"'><input type='button' value='查看交易'></p>");
             }
 
         });
@@ -81,7 +87,61 @@
                 $(this).parents('p').append("<p style='padding-left:40px;color:red;'>Failed to send transaction:" + err + "</p>");
                 console.error("Failed to send transaction:", err);// Update status
             }
-        })
+        });
+        $('div[wallet]').delegate('p[transactions] input', 'click', async function () {
+            var fromAccount = $(this).parents('p').attr('from');
+            const web3 = new Web3(window.ethereum);
+            var maxBlockNum = await web3.eth.getBlockNumber();
+            var earliestNum = 0;
+            maxBlockNum = parseInt(maxBlockNum);
+            for (var blockIndex = earliestNum; blockIndex < maxBlockNum; blockIndex++) {
+                var block = await web3.eth.getBlock(blockIndex);
+                var transactions = block.transactions;
+                if (typeof transactions == 'undefined') {
+                    continue;
+                }
+                for (var i = 0; i < transactions.length; i++) {
+                    var tx = transactions[i];
+                    var transaction = await web3.eth.getTransaction(tx);
+                    var txAddress = transaction.hash;
+                    var from = transaction.from;//交易的调用账号地址;
+                    if (from.toLowerCase() != fromAccount.toLowerCase()) {
+                        continue;
+                    }
+                    console.log(transaction);
+                    $(this).parents('p').append("<p style='padding-left:40px;' txAddress from='"+from+"'>" + txAddress + "</p>");
+                }
+            }
+        });
+        $('div[tx]').delegate('p[view]', 'click', async function () {
+            var url=$(this).siblings('p[url]').find('input').val();
+            var web3;
+            if(url==''){
+                web3 = new Web3(window.ethereum);
+            }else{
+                web3 = new Web3(new Web3.providers.HttpProvider(url));
+            }
+            var maxBlockNum = await web3.eth.getBlockNumber();
+            var earliestNum = 0;
+            maxBlockNum = parseInt(maxBlockNum);
+            for (var blockIndex = earliestNum; blockIndex < maxBlockNum; blockIndex++) {
+                var block = await web3.eth.getBlock(blockIndex);
+                var transactions = block.transactions;
+                if (typeof transactions == 'undefined') {
+                    continue;
+                }
+                for (var i = 0; i < transactions.length; i++) {
+                    var tx = transactions[i];
+                    var transaction = await web3.eth.getTransaction(tx);
+                    console.log(transaction);
+                    var txAddress = transaction.hash;
+                    var from = transaction.from;//交易的调用账号地址;
+                    $(this).parents('div').append("<p style='padding-left:40px;' txAddress>txAddress:" + txAddress + "</p>");
+                    $(this).parents('div').append("<p style='padding-left:80px;' from>from:" + from + "</p>");
+                }
+            }
+
+        });
     });
 
 </script>

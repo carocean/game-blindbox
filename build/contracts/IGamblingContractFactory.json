@@ -1,0 +1,509 @@
+{
+  "contractName": "IGamblingContractFactory",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "contractAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "root",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "dealer",
+              "type": "address"
+            },
+            {
+              "internalType": "uint8",
+              "name": "luckyCount",
+              "type": "uint8"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct CreateGamblingContractMessage",
+          "name": "e",
+          "type": "tuple"
+        }
+      ],
+      "name": "OnCreateGamblingContract",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_dealer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_luckyCount",
+          "type": "uint8"
+        }
+      ],
+      "name": "createBlindBoxContract",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "enumDealer",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"root\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"dealer\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"luckyCount\",\"type\":\"uint8\"}],\"indexed\":false,\"internalType\":\"struct CreateGamblingContractMessage\",\"name\":\"e\",\"type\":\"tuple\"}],\"name\":\"OnCreateGamblingContract\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_dealer\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_luckyCount\",\"type\":\"uint8\"}],\"name\":\"createBlindBoxContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"enumDealer\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/IGamblingContractFactory.sol\":\"IGamblingContractFactory\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/IGamblingContractFactory.sol\":{\"keccak256\":\"0xaace6cef3f502c8e6faa29c0e176b9b547803985413b2a77caa7dd92d4e48b5a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b10e052eadb56e00ecb72692c5541019df3f9e1ece32eb80be482ebe42d1509d\",\"dweb:/ipfs/QmbmN5kwMwsFjgMVyeEdtiXF6VVxSchNsA15ohzJMyvxUX\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.8.20;\n\ninterface IGamblingContractFactory {\n    function createBlindBoxContract(\n        address _dealer,\n        uint8 _luckyCount\n    ) external returns (address);\n\n    function enumDealer() external returns (address[] memory);\n\n    event OnCreateGamblingContract(CreateGamblingContractMessage e);\n}\n\nstruct CreateGamblingContractMessage {\n    address contractAddress;\n    address root;\n    address dealer;\n    uint8 luckyCount;\n}\n",
+  "sourcePath": "/Users/cj/worktemp/truffle-test2/contracts/IGamblingContractFactory.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/IGamblingContractFactory.sol",
+    "exportedSymbols": {
+      "CreateGamblingContractMessage": [
+        828
+      ],
+      "IGamblingContractFactory": [
+        819
+      ]
+    },
+    "id": 829,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 798,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.8",
+          ".20"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:33:3"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IGamblingContractFactory",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 819,
+        "linearizedBaseContracts": [
+          819
+        ],
+        "name": "IGamblingContractFactory",
+        "nameLocation": "77:24:3",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "functionSelector": "ec9d06e9",
+            "id": 807,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "createBlindBoxContract",
+            "nameLocation": "117:22:3",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 803,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 800,
+                  "mutability": "mutable",
+                  "name": "_dealer",
+                  "nameLocation": "157:7:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 807,
+                  "src": "149:15:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 799,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "149:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 802,
+                  "mutability": "mutable",
+                  "name": "_luckyCount",
+                  "nameLocation": "180:11:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 807,
+                  "src": "174:17:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 801,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "174:5:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "139:58:3"
+            },
+            "returnParameters": {
+              "id": 806,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 805,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 807,
+                  "src": "216:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 804,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "216:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "215:9:3"
+            },
+            "scope": 819,
+            "src": "108:117:3",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "64c5afbd",
+            "id": 813,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "enumDealer",
+            "nameLocation": "240:10:3",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 808,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "250:2:3"
+            },
+            "returnParameters": {
+              "id": 812,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 811,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 813,
+                  "src": "271:16:3",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 809,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "271:7:3",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 810,
+                    "nodeType": "ArrayTypeName",
+                    "src": "271:9:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "270:18:3"
+            },
+            "scope": 819,
+            "src": "231:58:3",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "7d9c1bb5cdfb7300aa73203786a326d741238cd3dc262698ccb17580b3cc3524",
+            "id": 818,
+            "name": "OnCreateGamblingContract",
+            "nameLocation": "301:24:3",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 817,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 816,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "e",
+                  "nameLocation": "356:1:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 818,
+                  "src": "326:31:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_CreateGamblingContractMessage_$828_memory_ptr",
+                    "typeString": "struct CreateGamblingContractMessage"
+                  },
+                  "typeName": {
+                    "id": 815,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 814,
+                      "name": "CreateGamblingContractMessage",
+                      "nameLocations": [
+                        "326:29:3"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 828,
+                      "src": "326:29:3"
+                    },
+                    "referencedDeclaration": 828,
+                    "src": "326:29:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_CreateGamblingContractMessage_$828_storage_ptr",
+                      "typeString": "struct CreateGamblingContractMessage"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "325:33:3"
+            },
+            "src": "295:64:3"
+          }
+        ],
+        "scope": 829,
+        "src": "67:294:3",
+        "usedErrors": []
+      },
+      {
+        "canonicalName": "CreateGamblingContractMessage",
+        "id": 828,
+        "members": [
+          {
+            "constant": false,
+            "id": 821,
+            "mutability": "mutable",
+            "name": "contractAddress",
+            "nameLocation": "414:15:3",
+            "nodeType": "VariableDeclaration",
+            "scope": 828,
+            "src": "406:23:3",
+            "stateVariable": false,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 820,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "406:7:3",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 823,
+            "mutability": "mutable",
+            "name": "root",
+            "nameLocation": "443:4:3",
+            "nodeType": "VariableDeclaration",
+            "scope": 828,
+            "src": "435:12:3",
+            "stateVariable": false,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 822,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "435:7:3",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 825,
+            "mutability": "mutable",
+            "name": "dealer",
+            "nameLocation": "461:6:3",
+            "nodeType": "VariableDeclaration",
+            "scope": 828,
+            "src": "453:14:3",
+            "stateVariable": false,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 824,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "453:7:3",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 827,
+            "mutability": "mutable",
+            "name": "luckyCount",
+            "nameLocation": "479:10:3",
+            "nodeType": "VariableDeclaration",
+            "scope": 828,
+            "src": "473:16:3",
+            "stateVariable": false,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint8",
+              "typeString": "uint8"
+            },
+            "typeName": {
+              "id": 826,
+              "name": "uint8",
+              "nodeType": "ElementaryTypeName",
+              "src": "473:5:3",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint8",
+                "typeString": "uint8"
+              }
+            },
+            "visibility": "internal"
+          }
+        ],
+        "name": "CreateGamblingContractMessage",
+        "nameLocation": "370:29:3",
+        "nodeType": "StructDefinition",
+        "scope": 829,
+        "src": "363:129:3",
+        "visibility": "public"
+      }
+    ],
+    "src": "32:461:3"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.19+commit.7dd6d404.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.14",
+  "updatedAt": "2023-08-09T16:09:17.004Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
