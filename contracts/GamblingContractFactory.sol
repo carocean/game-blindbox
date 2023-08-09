@@ -33,7 +33,16 @@ contract GamblingContractFactory is IGamblingContractFactory {
         contractIndexer[blindBoxAddress] = blindBox;
         address[] storage contractAddressArr = dealerIndexer[_dealer];
         contractAddressArr.push(blindBoxAddress);
-        dealerKeys.push(_dealer);
+        bool foundKey = false;
+        for (uint i = 0; i < dealerKeys.length; i++) {
+            if (dealerKeys[i] == _dealer) {
+                foundKey = true;
+                break;
+            }
+        }
+        if (!foundKey) {
+            dealerKeys.push(_dealer);
+        }
         CreateGamblingContractMessage
             memory cgcm = CreateGamblingContractMessage(
                 blindBoxAddress,

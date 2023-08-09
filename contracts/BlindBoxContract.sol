@@ -45,7 +45,7 @@ contract BlindBoxContract is IBlindBox {
 
     //扪盒
     function foldBlindBox(uint256 _hash) public override onlyRoot {
-        require(state != BlindBoxState.lottered, "");
+        require(state == BlindBoxState.lottered, "xx");
         state = BlindBoxState.folding;
         blindHash = _hash;
         betHash = 0;
@@ -56,7 +56,7 @@ contract BlindBoxContract is IBlindBox {
         uint8 _luckyNumber,
         string memory _nonce
     ) public payable returns (uint256) {
-        require(state != BlindBoxState.folding, "cannot be bet");
+        require(state == BlindBoxState.folding, "cannot be bet");
         uint256 betAmount = address(this).balance / luckyCount;
         require(
             betAmount <= gasleft() * 10,
@@ -76,7 +76,7 @@ contract BlindBoxContract is IBlindBox {
         uint8 _luckyNumber,
         string memory _nonce
     ) public override onlyRoot returns (bool) {
-        require(state != BlindBoxState.beted, "xxx");
+        require(state == BlindBoxState.beted, "xxx");
         state = BlindBoxState.lottering;
         bool win = isWin(_luckyNumber, _nonce);
         LotteryMessage memory lm = LotteryMessage(
