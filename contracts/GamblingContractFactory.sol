@@ -4,12 +4,15 @@ import "./IBlindBox.sol";
 import "./BlindBoxContract.sol";
 import "./IGamblingContractFactory.sol";
 
-//游戏合约工厂
+/**
+ * @dev
+ * Game contract factory, used by operators to apply for blind boxes.
+ */
 contract GamblingContractFactory is IGamblingContractFactory {
-    mapping(address => BlindBoxContract) public contractIndexer;
-    mapping(address => address[]) public dealerIndexer;
+    address[] public contracts;
+    mapping(address => address[]) private dealerIndexer;
     address[] private dealerKeys;
-    address private root;
+    address public root;
 
     constructor() {
         root = msg.sender;
@@ -24,13 +27,23 @@ contract GamblingContractFactory is IGamblingContractFactory {
         return dealerKeys;
     }
 
+    function listContractOfDealer(
+        address dealer
+    ) public view override returns (address[] memory) {
+        return dealerIndexer[dealer];
+    }
+
     function createBlindBoxContract(
         address _dealer,
         uint8 _luckyCount
     ) external override onlyRoot returns (address) {
-        BlindBoxContract blindBox = new BlindBoxContract(_dealer, _luckyCount);
+        BlindBoxContract blindBox = new BlindBoxContract(
+            root,
+            _dealer,
+            _luckyCount
+        );
         address blindBoxAddress = address(blindBox);
-        contractIndexer[blindBoxAddress] = blindBox;
+        contracts.push(blindBoxAddress);
         address[] storage contractAddressArr = dealerIndexer[_dealer];
         contractAddressArr.push(blindBoxAddress);
         bool foundKey = false;

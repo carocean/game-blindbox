@@ -72,9 +72,28 @@
       ],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "dealer",
+          "type": "address"
+        }
+      ],
+      "name": "listContractOfDealer",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"root\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"dealer\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"luckyCount\",\"type\":\"uint8\"}],\"indexed\":false,\"internalType\":\"struct CreateGamblingContractMessage\",\"name\":\"e\",\"type\":\"tuple\"}],\"name\":\"OnCreateGamblingContract\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_dealer\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_luckyCount\",\"type\":\"uint8\"}],\"name\":\"createBlindBoxContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"enumDealer\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/IGamblingContractFactory.sol\":\"IGamblingContractFactory\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/IGamblingContractFactory.sol\":{\"keccak256\":\"0xaace6cef3f502c8e6faa29c0e176b9b547803985413b2a77caa7dd92d4e48b5a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b10e052eadb56e00ecb72692c5541019df3f9e1ece32eb80be482ebe42d1509d\",\"dweb:/ipfs/QmbmN5kwMwsFjgMVyeEdtiXF6VVxSchNsA15ohzJMyvxUX\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"root\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"dealer\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"luckyCount\",\"type\":\"uint8\"}],\"indexed\":false,\"internalType\":\"struct CreateGamblingContractMessage\",\"name\":\"e\",\"type\":\"tuple\"}],\"name\":\"OnCreateGamblingContract\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_dealer\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_luckyCount\",\"type\":\"uint8\"}],\"name\":\"createBlindBoxContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"enumDealer\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"dealer\",\"type\":\"address\"}],\"name\":\"listContractOfDealer\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/IGamblingContractFactory.sol\":\"IGamblingContractFactory\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/BlindBoxContract.sol\":{\"keccak256\":\"0x40867965dafc639343f7b1912057d23bdc42e75f1a6739782eaa4a190f28c553\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c1ca8e583735008bb14ce0646800b7dfe9b50fd5e32483fd42a7520e76587614\",\"dweb:/ipfs/QmPNy7814cxNsuLRMxwbG9ckFLBVKqSYCoou1GAqgodXCL\"]},\"project:/contracts/IBlindBox.sol\":{\"keccak256\":\"0x9e4d74e7895ed20b4b65fa1edd3a56384116a24d9bf4b42ca93fd5940330a656\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://50672fd6d5d4ef2a02e311ed5f2c827b7b48c81593fe69292c9d94fb96349313\",\"dweb:/ipfs/QmeDPujxE9tXQrzq2NJuhZKEY6uKxnQjjt9hRJnJ4AkBUv\"]},\"project:/contracts/IGamblingContractFactory.sol\":{\"keccak256\":\"0x75aee32e03c3e4ea076666142e56db68efb045f07d718ace0076dd734fa4b539\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1f82b4d64faf03ff2831f78359514e49aa301518aa5c8a09a91bc36446282641\",\"dweb:/ipfs/QmNpr62nj8WGqLmfa9hmJq2uS3Qp1MwmfrscUdwLLRCs7U\"]},\"project:/contracts/SafeMath.sol\":{\"keccak256\":\"0x3d3389073e3291a326f11eafff116ffe5f5911db7adc7968fadf416cb70ceaf6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d07dfba0ac92fda4f01346421543aee0bbca542d00a63a09f5a9809dc24755d8\",\"dweb:/ipfs/QmV2ioLUD6giRP83VuGAw6pSCm9ABm26rboaXsucVDVPYh\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -82,24 +101,45 @@
   "deployedGeneratedSources": [],
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.8.20;\n\ninterface IGamblingContractFactory {\n    function createBlindBoxContract(\n        address _dealer,\n        uint8 _luckyCount\n    ) external returns (address);\n\n    function enumDealer() external returns (address[] memory);\n\n    event OnCreateGamblingContract(CreateGamblingContractMessage e);\n}\n\nstruct CreateGamblingContractMessage {\n    address contractAddress;\n    address root;\n    address dealer;\n    uint8 luckyCount;\n}\n",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.8.20;\n\nimport \"./IBlindBox.sol\";\n\nimport \"./BlindBoxContract.sol\";\n\ninterface IGamblingContractFactory {\n    function createBlindBoxContract(\n        address _dealer,\n        uint8 _luckyCount\n    ) external returns (address);\n\n    function enumDealer() external returns (address[] memory);\n\n    function listContractOfDealer(\n        address dealer\n    ) external returns (address[] memory);\n\n    event OnCreateGamblingContract(CreateGamblingContractMessage e);\n}\n\nstruct CreateGamblingContractMessage {\n    address contractAddress;\n    address root;\n    address dealer;\n    uint8 luckyCount;\n}\n",
   "sourcePath": "/Users/cj/worktemp/truffle-test2/contracts/IGamblingContractFactory.sol",
   "ast": {
     "absolutePath": "project:/contracts/IGamblingContractFactory.sol",
     "exportedSymbols": {
+      "BetMessage": [
+        1189
+      ],
+      "BlindBoxContract": [
+        821
+      ],
+      "BlindBoxState": [
+        1143
+      ],
       "CreateGamblingContractMessage": [
-        828
+        1242
+      ],
+      "IBlindBox": [
+        1137
       ],
       "IGamblingContractFactory": [
-        819
+        1233
+      ],
+      "LotteryMessage": [
+        1200
+      ],
+      "SafeMath": [
+        1438
+      ],
+      "SplitMessage": [
+        1174
       ]
     },
-    "id": 829,
+    "id": 1243,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 798,
+        "id": 1202,
         "literals": [
           "solidity",
           ">=",
@@ -113,42 +153,66 @@
         "src": "32:33:3"
       },
       {
+        "absolutePath": "project:/contracts/IBlindBox.sol",
+        "file": "./IBlindBox.sol",
+        "id": 1203,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 1243,
+        "sourceUnit": 1201,
+        "src": "67:25:3",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "project:/contracts/BlindBoxContract.sol",
+        "file": "./BlindBoxContract.sol",
+        "id": 1204,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 1243,
+        "sourceUnit": 822,
+        "src": "94:32:3",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
         "abstract": false,
         "baseContracts": [],
         "canonicalName": "IGamblingContractFactory",
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 819,
+        "id": 1233,
         "linearizedBaseContracts": [
-          819
+          1233
         ],
         "name": "IGamblingContractFactory",
-        "nameLocation": "77:24:3",
+        "nameLocation": "138:24:3",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "functionSelector": "ec9d06e9",
-            "id": 807,
+            "id": 1213,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "createBlindBoxContract",
-            "nameLocation": "117:22:3",
+            "nameLocation": "178:22:3",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 803,
+              "id": 1209,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 800,
+                  "id": 1206,
                   "mutability": "mutable",
                   "name": "_dealer",
-                  "nameLocation": "157:7:3",
+                  "nameLocation": "218:7:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 807,
-                  "src": "149:15:3",
+                  "scope": 1213,
+                  "src": "210:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -156,10 +220,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 799,
+                    "id": 1205,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "149:7:3",
+                    "src": "210:7:3",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -170,13 +234,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 802,
+                  "id": 1208,
                   "mutability": "mutable",
                   "name": "_luckyCount",
-                  "nameLocation": "180:11:3",
+                  "nameLocation": "241:11:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 807,
-                  "src": "174:17:3",
+                  "scope": 1213,
+                  "src": "235:17:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -184,10 +248,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 801,
+                    "id": 1207,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "174:5:3",
+                    "src": "235:5:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -196,21 +260,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "139:58:3"
+              "src": "200:58:3"
             },
             "returnParameters": {
-              "id": 806,
+              "id": 1212,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 805,
+                  "id": 1211,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 807,
-                  "src": "216:7:3",
+                  "scope": 1213,
+                  "src": "277:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -218,10 +282,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 804,
+                    "id": 1210,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "216:7:3",
+                    "src": "277:7:3",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -231,42 +295,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "215:9:3"
+              "src": "276:9:3"
             },
-            "scope": 819,
-            "src": "108:117:3",
+            "scope": 1233,
+            "src": "169:117:3",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "functionSelector": "64c5afbd",
-            "id": 813,
+            "id": 1219,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "enumDealer",
-            "nameLocation": "240:10:3",
+            "nameLocation": "301:10:3",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 808,
+              "id": 1214,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "250:2:3"
+              "src": "311:2:3"
             },
             "returnParameters": {
-              "id": 812,
+              "id": 1218,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 811,
+                  "id": 1217,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 813,
-                  "src": "271:16:3",
+                  "scope": 1219,
+                  "src": "332:16:3",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -275,19 +339,19 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 809,
+                      "id": 1215,
                       "name": "address",
                       "nodeType": "ElementaryTypeName",
-                      "src": "271:7:3",
+                      "src": "332:7:3",
                       "stateMutability": "nonpayable",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "id": 810,
+                    "id": 1216,
                     "nodeType": "ArrayTypeName",
-                    "src": "271:9:3",
+                    "src": "332:9:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
                       "typeString": "address[]"
@@ -296,10 +360,104 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "270:18:3"
+              "src": "331:18:3"
             },
-            "scope": 819,
-            "src": "231:58:3",
+            "scope": 1233,
+            "src": "292:58:3",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "b90c1388",
+            "id": 1227,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "listContractOfDealer",
+            "nameLocation": "365:20:3",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1222,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1221,
+                  "mutability": "mutable",
+                  "name": "dealer",
+                  "nameLocation": "403:6:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1227,
+                  "src": "395:14:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1220,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "395:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "385:30:3"
+            },
+            "returnParameters": {
+              "id": 1226,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1225,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1227,
+                  "src": "434:16:3",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 1223,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "434:7:3",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 1224,
+                    "nodeType": "ArrayTypeName",
+                    "src": "434:9:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "433:18:3"
+            },
+            "scope": 1233,
+            "src": "356:96:3",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
@@ -307,75 +465,75 @@
           {
             "anonymous": false,
             "eventSelector": "7d9c1bb5cdfb7300aa73203786a326d741238cd3dc262698ccb17580b3cc3524",
-            "id": 818,
+            "id": 1232,
             "name": "OnCreateGamblingContract",
-            "nameLocation": "301:24:3",
+            "nameLocation": "464:24:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 817,
+              "id": 1231,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 816,
+                  "id": 1230,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "e",
-                  "nameLocation": "356:1:3",
+                  "nameLocation": "519:1:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 818,
-                  "src": "326:31:3",
+                  "scope": 1232,
+                  "src": "489:31:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_CreateGamblingContractMessage_$828_memory_ptr",
+                    "typeIdentifier": "t_struct$_CreateGamblingContractMessage_$1242_memory_ptr",
                     "typeString": "struct CreateGamblingContractMessage"
                   },
                   "typeName": {
-                    "id": 815,
+                    "id": 1229,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 814,
+                      "id": 1228,
                       "name": "CreateGamblingContractMessage",
                       "nameLocations": [
-                        "326:29:3"
+                        "489:29:3"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 828,
-                      "src": "326:29:3"
+                      "referencedDeclaration": 1242,
+                      "src": "489:29:3"
                     },
-                    "referencedDeclaration": 828,
-                    "src": "326:29:3",
+                    "referencedDeclaration": 1242,
+                    "src": "489:29:3",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_CreateGamblingContractMessage_$828_storage_ptr",
+                      "typeIdentifier": "t_struct$_CreateGamblingContractMessage_$1242_storage_ptr",
                       "typeString": "struct CreateGamblingContractMessage"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "325:33:3"
+              "src": "488:33:3"
             },
-            "src": "295:64:3"
+            "src": "458:64:3"
           }
         ],
-        "scope": 829,
-        "src": "67:294:3",
+        "scope": 1243,
+        "src": "128:396:3",
         "usedErrors": []
       },
       {
         "canonicalName": "CreateGamblingContractMessage",
-        "id": 828,
+        "id": 1242,
         "members": [
           {
             "constant": false,
-            "id": 821,
+            "id": 1235,
             "mutability": "mutable",
             "name": "contractAddress",
-            "nameLocation": "414:15:3",
+            "nameLocation": "577:15:3",
             "nodeType": "VariableDeclaration",
-            "scope": 828,
-            "src": "406:23:3",
+            "scope": 1242,
+            "src": "569:23:3",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -383,10 +541,10 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 820,
+              "id": 1234,
               "name": "address",
               "nodeType": "ElementaryTypeName",
-              "src": "406:7:3",
+              "src": "569:7:3",
               "stateMutability": "nonpayable",
               "typeDescriptions": {
                 "typeIdentifier": "t_address",
@@ -397,13 +555,13 @@
           },
           {
             "constant": false,
-            "id": 823,
+            "id": 1237,
             "mutability": "mutable",
             "name": "root",
-            "nameLocation": "443:4:3",
+            "nameLocation": "606:4:3",
             "nodeType": "VariableDeclaration",
-            "scope": 828,
-            "src": "435:12:3",
+            "scope": 1242,
+            "src": "598:12:3",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -411,10 +569,10 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 822,
+              "id": 1236,
               "name": "address",
               "nodeType": "ElementaryTypeName",
-              "src": "435:7:3",
+              "src": "598:7:3",
               "stateMutability": "nonpayable",
               "typeDescriptions": {
                 "typeIdentifier": "t_address",
@@ -425,13 +583,13 @@
           },
           {
             "constant": false,
-            "id": 825,
+            "id": 1239,
             "mutability": "mutable",
             "name": "dealer",
-            "nameLocation": "461:6:3",
+            "nameLocation": "624:6:3",
             "nodeType": "VariableDeclaration",
-            "scope": 828,
-            "src": "453:14:3",
+            "scope": 1242,
+            "src": "616:14:3",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -439,10 +597,10 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 824,
+              "id": 1238,
               "name": "address",
               "nodeType": "ElementaryTypeName",
-              "src": "453:7:3",
+              "src": "616:7:3",
               "stateMutability": "nonpayable",
               "typeDescriptions": {
                 "typeIdentifier": "t_address",
@@ -453,13 +611,13 @@
           },
           {
             "constant": false,
-            "id": 827,
+            "id": 1241,
             "mutability": "mutable",
             "name": "luckyCount",
-            "nameLocation": "479:10:3",
+            "nameLocation": "642:10:3",
             "nodeType": "VariableDeclaration",
-            "scope": 828,
-            "src": "473:16:3",
+            "scope": 1242,
+            "src": "636:16:3",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -467,10 +625,10 @@
               "typeString": "uint8"
             },
             "typeName": {
-              "id": 826,
+              "id": 1240,
               "name": "uint8",
               "nodeType": "ElementaryTypeName",
-              "src": "473:5:3",
+              "src": "636:5:3",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint8",
                 "typeString": "uint8"
@@ -480,14 +638,14 @@
           }
         ],
         "name": "CreateGamblingContractMessage",
-        "nameLocation": "370:29:3",
+        "nameLocation": "533:29:3",
         "nodeType": "StructDefinition",
-        "scope": 829,
-        "src": "363:129:3",
+        "scope": 1243,
+        "src": "526:129:3",
         "visibility": "public"
       }
     ],
-    "src": "32:461:3"
+    "src": "32:624:3"
   },
   "compiler": {
     "name": "solc",
@@ -495,7 +653,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.14",
-  "updatedAt": "2023-08-09T16:09:17.004Z",
+  "updatedAt": "2023-08-12T15:18:11.642Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

@@ -1,21 +1,38 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.8.20;
 import "./IBlindBox.sol";
+import "./SafeMath.sol";
 
+/**
+ * Blind box game gameplay: Players only need to guess a lucky number.
+ * If they win, they will receive a certain proportion of the current prize pool's bonus.
+ * If they lose, the bet money will be included in the prize pool.
+ * The operator can apply for blind boxes from the platform, and can apply for multiple blind boxes.
+ * The operator can receive a certain proportion of the transaction fee from the player's winning.
+ *
+ * Security: The blind box platform is betting a lucky number and generating a hash.
+ * After the lottery, players and operators can verify that the platform has not cheated by verifying the hash. Similarly,
+ * players will also generate a hash of the guessed lucky number after placing a bet,
+ * so It is fair and transparent to platforms, operators, and players.
+ */
 contract BlindBoxContract is IBlindBox {
-    address public root;
-    address public dealer;
-    address public player;
+    using SafeMath for *;
+    address private root;
+    address private dealer;
+    address private player;
+    address private deployer;
     BlindBoxState private state;
-    uint8 public luckyCount;
-    uint256 private blindHash;
-    uint256 private betHash;
+    uint8 public luckyCount; //account of lucky numbers
+    uint256 private blindHash; //Hash of blindbox
+    uint256 private betHash; //Hash of player bet
+    uint16 public odds = 80; //Winning Pool odds
+    uint16 public kickbackRate = 20; //kickback rate
+    uint16 public brokerageRate = 70; //Operator commission rate, which is the proportion of kickback rate
+    uint16 public taxRate = 30; //Platform tax rate, which is the proportion of handling fees
 
-    constructor(
-        address _dealer,
-        uint8 _luckyCount
-    ) {
-        root = msg.sender;
+    constructor(address _root, address _dealer, uint8 _luckyCount) {
+        deployer = msg.sender;
+        root = _root;
         dealer = _dealer;
         luckyCount = _luckyCount;
         state = BlindBoxState.lottered;
@@ -30,9 +47,25 @@ contract BlindBoxContract is IBlindBox {
         require(msg.sender == dealer, "Only dealer can call this.");
         _;
     }
+    modifier onlyPlayer() {
+        require(msg.sender == player, "Not a betting player");
+        _;
+    }
 
     function getState() public view override returns (BlindBoxState) {
         return state;
+    }
+
+    function getRoot() public view override returns (address) {
+        return root;
+    }
+
+    function getDealer() public view override returns (address) {
+        return dealer;
+    }
+
+    function getPlayer() public view override returns (address) {
+        return player;
     }
 
     function getBlindHash() public view override returns (uint256) {
@@ -43,40 +76,76 @@ contract BlindBoxContract is IBlindBox {
         return betHash;
     }
 
-    //扪盒
-    function foldBlindBox(uint256 _hash) public override onlyRoot {
-        require(state == BlindBoxState.lottered, "xx");
-        state = BlindBoxState.folding;
-        blindHash = _hash;
-        betHash = 0;
+    function getBetFunds() public view override returns (uint256) {
+        uint256 funds = (address(this).balance).div(luckyCount);
+        return funds;
     }
 
-    //下注
+    function getBonus() public view override returns (uint256) {
+        uint256 bonus = (address(this).balance).mul(odds).div(100);
+        return bonus;
+    }
+
+    function getKickbackFunds() public view override returns (uint256) {
+        uint256 bonus = getBonus();
+        uint256 kickback = bonus.mul(kickbackRate).div(100);
+        return kickback;
+    }
+
+    function getBrokerageFunds() public view override returns (uint256) {
+        uint256 kickback = getKickbackFunds();
+        uint256 brokerage = kickback.mul(brokerageRate).div(100);
+        return brokerage;
+    }
+
+    ///@dev Divided revenue from the platform's handling fees after the lottery
+    function getTaxFunds() public view override returns (uint256) {
+        uint256 tax = getKickbackFunds() - getBrokerageFunds();
+        return tax;
+    }
+
+    ///@dev The actual income that players can enjoy after winning, excluding gas fees
+    function getIncome() public view override returns (uint256) {
+        uint256 bonus = getBonus();
+        uint256 kickback = getKickbackFunds();
+        uint256 income = bonus - kickback;
+        return income;
+    }
+
+    ///@dev The rate of return that players can enjoy after winning
+    function getBenefitRate() public view override returns (uint16) {
+        uint16 benefitRate = uint16(
+            (odds.mul(100.sub(kickbackRate)).div(100)).mul(luckyCount)
+        );
+        return benefitRate;
+    }
+
+    ///@dev Touchbox, the platform will bet on the lucky number and generate a hash. After the lottery, anyone can verify it through the publicly available hash algorithm in the contract
+    function foldBlindBox(uint256 _hash) public override onlyRoot {
+        require(state == BlindBoxState.lottered, "xx");
+        blindHash = _hash;
+        betHash = 0;
+        state = BlindBoxState.folding;
+    }
+
+    ///@dev Betting, players must make payment to the contract through wallet before calling this method
     function placeBet(
         uint8 _luckyNumber,
         string memory _nonce
-    ) public payable returns (uint256) {
-        require(state == BlindBoxState.folding, "cannot be bet");
-        uint256 betAmount = address(this).balance / luckyCount;
-        require(
-            betAmount <= gasleft() * 10,
-            "The bet amount cannot be less than 10 times the gas fee"
-        );
-        state = BlindBoxState.betting;
-        uint256 balance = address(this).balance + msg.value;
-        payable(address(this)).transfer(balance);
+    ) public onlyPlayer returns (uint256) {
+        require(state == BlindBoxState.betting, "Bet not paid");
+
         betHash = genHash(_luckyNumber, _nonce);
-        player = msg.sender;
         state = BlindBoxState.beted;
         return betHash;
     }
 
-    //开盒
+    ///@dev Open the box or draw a prize. This method only allows platform calls
     function lottery(
         uint8 _luckyNumber,
         string memory _nonce
     ) public override onlyRoot returns (bool) {
-        require(state == BlindBoxState.beted, "xxx");
+        require(state == BlindBoxState.beted, "Bet not completed");
         state = BlindBoxState.lottering;
         bool win = isWin(_luckyNumber, _nonce);
         LotteryMessage memory lm = LotteryMessage(
@@ -88,33 +157,40 @@ contract BlindBoxContract is IBlindBox {
         );
         emit LotteryEvent(lm);
         splitBonus();
+        player = address(0x0);
         state = BlindBoxState.lottered;
         return win;
     }
 
     function splitBonus() private {
-        uint8 odds = 20;
-        uint8 brokerageRate = 70;
-        uint8 taxRate = 30;
-        uint256 bonus = (address(this).balance * 80) / 100;
-        uint256 kickback = (bonus * odds) / 100;
-        uint256 income = bonus - kickback;
-        uint256 brokerage = (kickback * brokerageRate) / 100;
-        uint256 tax = kickback - brokerage;
+        uint256 betFunds = getBetFunds();
+        uint256 bonus = getBonus();
+        uint256 kickback = getKickbackFunds();
+        uint256 brokerage = getBrokerageFunds();
+        uint256 tax = getTaxFunds();
+        uint256 income = getIncome();
 
-        payable(player).transfer(income);
-        payable(dealer).transfer(brokerage);
-        payable(root).transfer(tax);
+        (bool success, ) = payable(player).call{value: income}(new bytes(0));
+        require(success, "ETH_TRANSFER_FAILED");
+        (bool success1, ) = payable(dealer).call{value: brokerage}(
+            new bytes(0)
+        );
+        require(success1, "ETH_TRANSFER_FAILED");
+        (bool success2, ) = payable(root).call{value: tax}(new bytes(0));
+        require(success2, "ETH_TRANSFER_FAILED");
 
         SplitMessage memory sm = SplitMessage(
             player,
             dealer,
             root,
             odds,
+            kickbackRate,
             brokerageRate,
             taxRate,
             address(this).balance,
+            betFunds,
             bonus,
+            kickback,
             brokerage,
             tax,
             income,
@@ -123,27 +199,54 @@ contract BlindBoxContract is IBlindBox {
         emit SplitEvent(sm);
     }
 
-    fallback() external payable {
+    function feed() external payable {
+        require(msg.value > 0, "Feeding cannot be zero");
+        uint256 prevBalance = (address(this).balance - msg.value);
+
+        state = BlindBoxState.betting;
+        player = msg.sender;
         BetMessage memory bm = BetMessage(
-            player,
-            0,
+            msg.sender,
+            2, //2 represents feeding
             betHash,
             msg.value,
             address(this).balance,
-            block.timestamp
+            prevBalance,
+            gasleft()
         );
 
         emit BetEvent(bm);
     }
 
+    fallback() external payable {
+        require(false, "No other calls supported");
+    }
+
     receive() external payable {
+        uint256 prevBetFunds = (address(this).balance - msg.value).div(
+            luckyCount
+        );
+
+        require(state == BlindBoxState.folding, "cannot be bet");
+        require(
+            msg.value >= prevBetFunds,
+            string(
+                abi.encodePacked(
+                    "The betting amount should be at least ",
+                    msg.value
+                )
+            )
+        );
+        state = BlindBoxState.betting;
+        player = msg.sender;
         BetMessage memory bm = BetMessage(
-            player,
-            1,
+            msg.sender,
+            1, //1 represents a transaction
             betHash,
             msg.value,
             address(this).balance,
-            block.timestamp
+            prevBetFunds,
+            gasleft()
         );
 
         emit BetEvent(bm);
@@ -153,6 +256,7 @@ contract BlindBoxContract is IBlindBox {
         return address(this).balance;
     }
 
+    ///@dev Win or not
     function isWin(
         uint8 _luckyNumber,
         string memory _nonce
@@ -162,6 +266,7 @@ contract BlindBoxContract is IBlindBox {
         return bh == betHash;
     }
 
+    ///@dev Generate Hash
     function genHash(
         uint8 _luckyNumber,
         string memory _nonce
@@ -170,6 +275,7 @@ contract BlindBoxContract is IBlindBox {
         return uint256(packed);
     }
 
+    ///@dev Compare Hash
     function compareHash(
         uint8 _luckyNumber,
         string memory _nonce,

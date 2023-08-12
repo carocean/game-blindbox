@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.8.20;
 
+import "./IBlindBox.sol";
+
+import "./BlindBoxContract.sol";
+
 interface IGamblingContractFactory {
     function createBlindBoxContract(
         address _dealer,
@@ -8,6 +12,10 @@ interface IGamblingContractFactory {
     ) external returns (address);
 
     function enumDealer() external returns (address[] memory);
+
+    function listContractOfDealer(
+        address dealer
+    ) external returns (address[] memory);
 
     event OnCreateGamblingContract(CreateGamblingContractMessage e);
 }

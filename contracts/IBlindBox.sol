@@ -4,16 +4,36 @@ pragma solidity >=0.4.22 <0.8.20;
 interface IBlindBox {
     function getState() external returns (BlindBoxState);
 
+    function getRoot() external returns (address);
+
+    function getDealer() external returns (address);
+
+    function getPlayer() external returns (address);
+
     function getBlindHash() external returns (uint256);
 
     function getBetHash() external returns (uint256);
+
+    function getBetFunds() external returns (uint256);
+
+    function getBonus() external returns (uint256);
+
+    function getKickbackFunds() external returns (uint256);
+
+    function getBrokerageFunds() external returns (uint256);
+
+    function getTaxFunds() external returns (uint256);
+
+    function getIncome() external returns (uint256);
+
+    function getBenefitRate() external returns (uint16);
 
     function foldBlindBox(uint256 _hash) external;
 
     function placeBet(
         uint8 luckyNumber,
         string memory nonce
-    ) external payable returns (uint256);
+    ) external returns (uint256);
 
     function lottery(
         uint8 _luckyNumber,
@@ -55,11 +75,14 @@ struct SplitMessage {
     address player;
     address dealer;
     address root;
-    uint8 odds;
-    uint8 brokerageRate;
-    uint8 taxRate;
+    uint16 odds;
+    uint16 kickbackRate;
+    uint16 brokerageRate;
+    uint16 taxRate;
     uint256 balance;
+    uint256 betFunds;
     uint256 bonus;
+    uint256 kickback;
     uint256 brokerage;
     uint256 tax;
     uint256 income;
@@ -71,7 +94,8 @@ struct BetMessage {
     uint256 betHash;
     uint256 amount;
     uint256 balance;
-    uint ctime;
+    uint256 betFunds;
+    uint256 gas;
 }
 struct LotteryMessage {
     address player;

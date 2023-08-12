@@ -9,7 +9,7 @@ const test = async function (v) {
     // fs.closeSync;
     // var abiText=JSON.parse(abif)
     // abifile=__dirname+'/YourContractName.json';
-    const provider = new Web3.providers.HttpProvider('http://192.168.0.254:8545');
+    const provider = new Web3.providers.HttpProvider('ws://127.0.0.1:8545');
     // const contractArtifact = requireNoCache(abifile); //produced by Truffle compile
     const contractArtifact = require(abifile); //produced by Truffle compile
     const contract = require("@truffle/contract");
