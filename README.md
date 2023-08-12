@@ -1,4 +1,4 @@
-## Blind Box Game: Ethereum Blockchain Contract
+## Blind Box Game: Ethereum Blockchain Contracts
 > ethereum  
 > solidity  
 > nodejs  
