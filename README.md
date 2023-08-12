@@ -1,7 +1,13 @@
-## Blind box game
+## Blind Box Game: Ethereum Blockchain Contract
+> ethereum  
+> solidity  
+> nodejs  
+> metamask  
+> web3js  
+> blockchain  
 
 ```
-  Blind box game gameplay: Players only need to guess a lucky number.
+  Blind box gameplay: Players only need to guess a lucky number.
   If they win, they will receive a certain proportion of the current prize pool's bonus.
   If they lose, the bet money will be included in the prize pool.
   The operator can apply for blind boxes from the platform, and can apply for multiple blind boxes.
