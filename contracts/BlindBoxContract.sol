@@ -202,9 +202,6 @@ contract BlindBoxContract is IBlindBox {
     function feed() external payable {
         require(msg.value > 0, "Feeding cannot be zero");
         uint256 prevBalance = (address(this).balance - msg.value);
-
-        state = BlindBoxState.betting;
-        player = msg.sender;
         BetMessage memory bm = BetMessage(
             msg.sender,
             2, //2 represents feeding
@@ -214,7 +211,6 @@ contract BlindBoxContract is IBlindBox {
             prevBalance,
             gasleft()
         );
-
         emit BetEvent(bm);
     }
 
