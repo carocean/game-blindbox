@@ -298,3 +298,14 @@ module.exports.isValidDealer = async function (req, res) {
     var isValidDealer = await instance.isValidDealer(dealer);
     res.end(isValidDealer + "");
 }
+module.exports.verifySign = async function (req, res) {
+    var uri = url.parse(req.url, true);
+    var account = uri.query['account'];
+    var nonce = uri.query['nonce'];
+    var sign = uri.query['sign'];
+    var text = web3.utils.keccak256("\x19Ethereum Signed Message:\n" + web3.utils.utf8ToHex(nonce));
+    //返回：用于签名的以太坊地址，即签名的账户地址
+    var recoverAccount = await web3.eth.accounts.recover(text, sign,"\x19Ethereum Signed Message:\n");
+    console.log(recoverAccount);
+    res.write((recoverAccount==account)+'');
+}

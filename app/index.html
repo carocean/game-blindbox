@@ -21,7 +21,7 @@
         });
 
         $('div[wallet]>p[connector]').click(async function () {
-            if(typeof window.ethereum=="undefined"||window.ethereum==null){
+            if (typeof window.ethereum == "undefined" || window.ethereum == null) {
                 alert('请安装metamask插件，在浏览器的插件市场搜：metamask而后安装');
             }
             const web3 = new Web3(window.ethereum);
@@ -44,8 +44,8 @@
                 $('div[wallet]').append("<p style='padding-left:40px;' amount><input type='text' placeholder='输入金额，单位ether'></p>");
                 $('div[wallet]').append("<p style='padding-left:40px;' send><input type='button' value='发送'></p>");
                 $('div[wallet]').append("<p style='padding-left:40px;' nonce><input type='text' placeholder='输入任意串nonce'></p>");
-                $('div[wallet]').append("<p style='padding-left:40px;' sign><input type='button' value='签名'></p>");
-                $('div[wallet]').append("<p style='padding-left:40px;' transactions from='"+from+"'><input type='button' value='查看交易'></p>");
+                $('div[wallet]').append("<p style='padding-left:40px;' sign><input type='button' value='签名并后端验证（可借此实现一键登录机制）'></p>");
+                $('div[wallet]').append("<p style='padding-left:40px;' transactions from='" + from + "'><input type='button' value='查看交易'></p>");
             }
 
         });
@@ -59,6 +59,9 @@
                 var sign = await web3.eth.sign(text, from);
                 console.log("Transaction result:", sign);
                 $(this).parents('p').append("<p style='padding-left:40px;color:green;'>Transaction sent successfully. sign:" + sign + "</p>");
+                $.get('/api/blindbox.verifySign', { sign: sign, nonce: nonce ,account:from}, function (data) {
+                    alert('后端验证结果：'+data);
+                })
             } catch (err) {
                 $(this).parents('p').append("<p style='padding-left:40px;color:red;'>Failed to send transaction:" + err + "</p>");
                 console.error("Failed to send transaction:", err);// Update status
@@ -111,16 +114,16 @@
                         continue;
                     }
                     console.log(transaction);
-                    $(this).parents('p').append("<p style='padding-left:40px;' txAddress from='"+from+"'>" + txAddress + "</p>");
+                    $(this).parents('p').append("<p style='padding-left:40px;' txAddress from='" + from + "'>" + txAddress + "</p>");
                 }
             }
         });
         $('div[tx]').delegate('p[view]', 'click', async function () {
-            var url=$(this).siblings('p[url]').find('input').val();
+            var url = $(this).siblings('p[url]').find('input').val();
             var web3;
-            if(url==''){
+            if (url == '') {
                 web3 = new Web3(window.ethereum);
-            }else{
+            } else {
                 web3 = new Web3(new Web3.providers.HttpProvider(url));
             }
             var maxBlockNum = await web3.eth.getBlockNumber();

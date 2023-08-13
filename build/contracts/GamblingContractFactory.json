@@ -17037,8 +17037,8 @@
     "1338": {
       "events": {},
       "links": {},
-      "address": "0x346CC8092163781aa27262609e8Dba4c3122315b",
-      "transactionHash": "0x7cbfd6cbfbd31324d1321d86425d80d8c1bd7d7fa8ee42714e2b2353a0cdebf3"
+      "address": "0x86101f2f72368309a22953F3320908DBCf3215cA",
+      "transactionHash": "0x4352bde5b86e27f6917441dd4581e59791d460c96ad253f6c92fbd3ed928a7c6"
     },
     "5777": {
       "events": {},
@@ -17048,7 +17048,7 @@
     }
   },
   "schemaVersion": "3.4.14",
-  "updatedAt": "2023-08-13T06:16:29.785Z",
+  "updatedAt": "2023-08-13T12:28:08.456Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Game contract factory, used by operators to apply for blind boxes.",
