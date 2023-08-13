@@ -35,7 +35,7 @@
                     <option value="@@">未选择</option>
                 </select>
             </li>
-            <li class="bb-view"><a style="cursor: pointer;text-decoration: underline;">查看</a></li>
+            <li class="bb-view"><a style="cursor: pointer;text-decoration: underline;">刷新</a></li>
         </ul>
         <ul class="bb-panel" style="display: none;">
             <li>
@@ -43,14 +43,15 @@
                     <li class="bb-dls" state>
                         <p><label>状态</label><span>xxx</span></p>
                     </li>
+                    <li class="bb-dls" isRunning>
+                        <p><label>启/停</label><span>xxx</span></p>
+                    </li>
                     <li class="bb-dls" balance>
                         <p><label>奖池</label><span>xxx</span></p>
                     </li>
                     <li class="bb-dls" luckyCount>
                         <p><label>幸运数个数</label><span>xxx</span></p>
                     </li>
-
-
                     <li class="bb-dls" odds title="即当前奖池*赔率即为可能得到的钱">
                         <p><label>奖池赔率</label><span>xxx</span></p>
                     </li>
@@ -148,7 +149,12 @@
     $(document).ready(async function () {
         const web3 = new Web3(window.ethereum);
 
-
+        $('.bb-factory ul li[withdraw] a').click(function () {
+            $.get('/api/blindbox.withdraw', {}, function (data) {
+                refreshBalance();
+            });
+        })
+        var tempAmountE = $('.bb-form li[amount]').clone();
         $('.bb-form li[req] a').click(async function () {
             var luckyCount = $('.bb-form li[lucky] input').val();
             if (luckyCount == '' || typeof luckyCount == 'undefined') {
@@ -183,60 +189,86 @@
             $('.mask .dialog p[tips] span').empty();
             $('.mask').attr('itfor', 'create');
             $('.mask').show();
-
+            tempAmountE = $('.bb-form li[amount]').clone();
         })
+
+        $('.blindbox').undelegate('.mask[itfor="create"] .dialog select', 'change');
+        $('.blindbox').delegate('.mask[itfor="create"] .dialog select', 'change', function () {
+            var dealer = $(this).val();
+            if ('@@' == dealer) {
+                return;
+            }
+            $.get('/api/blindbox.isValidDealer', { dealer: dealer }, function (data) {
+                var isValidDealer = 'true' == data;
+                var amountE = $('.mask[itfor="create"] .dialog p[amount]');
+                amountE.attr('isValidDealer', isValidDealer);
+                if (isValidDealer) {
+                    amountE.empty();
+                    amountE.append("<span style='font-size:12px;'>所选账户已是有效的付费会员，点确认按钮不会扣款</span>");
+                } else {
+                    amountE.empty();
+                    amountE.append("你需支付注金" + tempAmountE.html());
+                }
+            });
+        });
         $('.blindbox').undelegate('.mask[itfor="create"] .dialog ul[ops] li[yes]', 'click');
         $('.blindbox').delegate('.mask[itfor="create"] .dialog ul[ops] li[yes]', 'click', async function () {
-            var amount = $('.mask .dialog p[amount]').attr('amount');
-            if (typeof amount == "undefined" || amount == '') {
-                alert('金额为空');
-                return;
-            }
-            var contractAddress = $('.mask .dialog p[amount]').attr('contractAddress');
-            if (typeof contractAddress == "undefined" || contractAddress == '') {
-                alert('合约地址为空');
-                return;
-            }
-            var payMode = $('.mask .dialog p[amount]').attr('payMode');
-            if (typeof payMode == "undefined" || payMode == '') {
-                alert('付款方式为空');
-                return;
-            }
+            var isValidDealer = $('.mask[itfor="create"] .dialog p[amount]').attr('isValidDealer');
             var dealer = $('.mask .dialog select').val();
             if ('@@' == dealer) {
                 return;
             }
-            const amountWei = web3.utils.toWei(amount, "ether");
-            const transaction = {
-                from: dealer,
-                to: contractAddress,
-                value: amountWei,
-                // nonce: Math.floor((Math.random()*100000)+1)
-            };
-            switch (payMode) {
-                case '1':
-                    break;
-                case '2':
-                    transaction.data = web3.eth.abi.encodeFunctionSignature('recMothlyFee()');
-                    break;
+            //无效则需要付款
+            if ("true" != isValidDealer) {
+                var amount = $('.mask .dialog p[amount]').attr('amount');
+                if (typeof amount == "undefined" || amount == '') {
+                    alert('金额为空');
+                    return;
+                }
+                var contractAddress = $('.mask .dialog p[amount]').attr('contractAddress');
+                if (typeof contractAddress == "undefined" || contractAddress == '') {
+                    alert('合约地址为空');
+                    return;
+                }
+                var payMode = $('.mask .dialog p[amount]').attr('payMode');
+                if (typeof payMode == "undefined" || payMode == '') {
+                    alert('付款方式为空');
+                    return;
+                }
+
+                const amountWei = web3.utils.toWei(amount, "ether");
+                const transaction = {
+                    from: dealer,
+                    to: contractAddress,
+                    value: amountWei,
+                    // nonce: Math.floor((Math.random()*100000)+1)
+                };
+                switch (payMode) {
+                    case '1':
+                        break;
+                    case '2':
+                        transaction.data = web3.eth.abi.encodeFunctionSignature('recMothlyFee()');
+                        break;
+                }
+                // Send the transaction
+                var result;
+                try {
+                    result = await web3.eth.sendTransaction(transaction);
+                } catch (err) {
+                    // Handle error
+                    $('.mask .dialog p[tips] span').html(err);
+                    console.error("Failed to send transaction:", err);// Update status
+                    return;
+                }
             }
-            // Send the transaction
-            var result;
-            try {
-                result = await web3.eth.sendTransaction(transaction);
-            } catch (err) {
-                // Handle error
-                $('.mask .dialog p[tips] span').html(err);
-                console.error("Failed to send transaction:", err);// Update status
-                return;
-            }
-            $('.mask').hide();
-            refreshBalance();
+
             var luckyCount = $('.mask .dialog p[luckyCount]').attr('luckyCount');
             if (typeof luckyCount == "undefined" || luckyCount == '') {
                 alert('幸运数字为空');
                 return;
             }
+            $('.mask').hide();
+            refreshBalance();
             $.get('/api/blindbox.create', { dealer: dealer, luckyCount: luckyCount }, function (data) {
                 var obj = JSON.parse(data);
                 $('.bb-create .bb-details').append("<li>" + obj.contractAddress + "</li>");
@@ -348,6 +380,7 @@
                 ul.find('li[brokerageFunds] span').html(obj.brokerageFunds);
                 ul.find('li[taxFunds] span').html(obj.taxFunds);
                 ul.find('li[income] span').html(obj.income);
+                ul.find('li[isRunning] span').html(obj.isRunning?'正在运行':'已停止');
 
                 var op = $('.bb-ul');
                 switch (obj.state) {
@@ -366,6 +399,16 @@
                 }
             });
         }
+        $('.bb-details .bb-dls[isRunning] span').click(function(){
+            var dealer = $('.bb-dealer select').val();
+            var address = $('.bb-contract select').val();
+            if ('@@' == address) {
+                return;
+            }
+            $.get('/api/blindbox.toggleRunning', { address: address, dealer: dealer }, function (data) {
+                refreshDetails();
+            })
+        })
         $('.bb-ul li[foldBlindBox] a').click(function () {
             var address = $('.bb-contract select').val();
             if ('@@' == address) {

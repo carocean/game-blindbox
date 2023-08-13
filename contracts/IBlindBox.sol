@@ -6,6 +6,12 @@ interface IBlindBox {
 
     function getRoot() external returns (address);
 
+    function isRunning() external returns (bool);
+
+    function stop() external;
+
+    function run() external;
+
     function getDealer() external returns (address);
 
     function getPlayer() external returns (address);

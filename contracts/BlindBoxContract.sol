@@ -22,6 +22,7 @@ contract BlindBoxContract is IBlindBox {
     address private player;
     address private deployer;
     BlindBoxState private state;
+    bool private running;
     uint8 public luckyCount; //account of lucky numbers
     uint256 private blindHash; //Hash of blindbox
     uint256 private betHash; //Hash of player bet
@@ -36,6 +37,7 @@ contract BlindBoxContract is IBlindBox {
         dealer = _dealer;
         luckyCount = _luckyCount;
         state = BlindBoxState.lottered;
+        running = true;
     }
 
     modifier onlyRoot() {
@@ -66,6 +68,18 @@ contract BlindBoxContract is IBlindBox {
 
     function getPlayer() public view override returns (address) {
         return player;
+    }
+
+    function isRunning() public view override returns (bool) {
+        return running;
+    }
+
+    function stop() public override onlyDealer {
+        running = false;
+    }
+
+    function run() public override onlyDealer {
+        running = true;
     }
 
     function getBlindHash() public view override returns (uint256) {
@@ -154,7 +168,11 @@ contract BlindBoxContract is IBlindBox {
 
     ///@dev Touchbox, the platform will bet on the lucky number and generate a hash. After the lottery, anyone can verify it through the publicly available hash algorithm in the contract
     function foldBlindBox(uint256 _hash) public override onlyRoot {
-        require(state == BlindBoxState.lottered, "xx");
+        require(running, "Blind box has stopped");
+        require(
+            state == BlindBoxState.lottered,
+            "Must have won a prize before calling"
+        );
         blindHash = _hash;
         betHash = 0;
         state = BlindBoxState.folding;
@@ -165,6 +183,7 @@ contract BlindBoxContract is IBlindBox {
         uint8 _luckyNumber,
         string memory _nonce
     ) public onlyPlayer returns (uint256) {
+        require(running, "Blind box has stopped");
         require(state == BlindBoxState.betting, "Bet not paid");
 
         betHash = genHash(_luckyNumber, _nonce);
@@ -177,6 +196,7 @@ contract BlindBoxContract is IBlindBox {
         uint8 _luckyNumber,
         string memory _nonce
     ) public override onlyRoot returns (bool) {
+        require(running, "Blind box has stopped");
         require(state == BlindBoxState.beted, "Bet not completed");
         state = BlindBoxState.lottering;
         bool win = isWin(_luckyNumber, _nonce);
@@ -251,6 +271,7 @@ contract BlindBoxContract is IBlindBox {
     }
 
     receive() external payable {
+        require(running, "Blind box has stopped");
         uint256 prevBetFunds = (address(this).balance - msg.value).div(
             luckyCount
         );

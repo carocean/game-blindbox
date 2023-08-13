@@ -19,3 +19,9 @@
   players will also generate a hash of the guessed lucky number after placing a bet,
   so It is fair and transparent to platforms, operators, and players.
  ```
+
+ ## usage
+ Open the project folder using vscode, click on the app directory in the left project tree, and press the shortcut key F5 to start debugging. The address is:
+
+ > [Test address:http://localhost:8080](http://localhost:8080)  
+ > Click on "Blind Box Contract Testing" on the page to enter the blind box testing page.

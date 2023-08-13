@@ -3,12 +3,14 @@ pragma solidity >=0.4.22 <0.8.20;
 import "./IBlindBox.sol";
 import "./BlindBoxContract.sol";
 import "./IGamblingContractFactory.sol";
+import "./SafeMath.sol";
 
 /**
  * @dev
  * Game contract factory, used by operators to apply for blind boxes.
  */
 contract GamblingContractFactory is IGamblingContractFactory {
+    using SafeMath for *;
     address[] public contracts;
     mapping(address => address[]) private dealerIndexer;
     address[] private dealerKeys;
@@ -24,6 +26,64 @@ contract GamblingContractFactory is IGamblingContractFactory {
     modifier onlyRoot() {
         require(root == msg.sender, "Only root can call this.");
         _;
+    }
+
+    function getApplyRights(
+        address dealer
+    ) public view override returns (ApplyRights memory) {
+        return rights[dealer];
+    }
+
+    function isPaidOfDealer(
+        address dealer
+    ) public view override returns (bool) {
+        ApplyRights memory right = rights[dealer];
+        return right.time != 0;
+    }
+
+    function isValidDealer(address dealer) public view override returns (bool) {
+        ApplyRights memory right = rights[dealer];
+        if (!right.isAllow) {
+            return false;
+        }
+        if (right.time == 0) {
+            return false;
+        }
+        (bool expired, ) = isExpired(dealer);
+        return !expired;
+    }
+
+    function isExpired(
+        address dealer
+    ) public view override returns (bool, uint8) {
+        ApplyRights memory right = rights[dealer];
+
+        bool _expired;
+        uint8 payMode = right.payMode;
+        if (right.time == 0) {
+            return (true, payMode);
+        }
+        if (payMode == 1) {
+            _expired = (block.timestamp - right.time >= 31536000);
+        }
+        if (payMode == 2) {
+            _expired = (block.timestamp - right.time >= 2678400);
+        }
+        return (_expired, payMode);
+    }
+
+    function getDealerCount() public view override returns (uint256) {
+        return dealerKeys.length;
+    }
+
+    function getBlindboxCount() public view override returns (uint256) {
+        uint256 count = 0;
+        for (uint i = 0; i < dealerKeys.length; i++) {
+            address key = dealerKeys[i];
+            address[] memory list = dealerIndexer[key];
+            count = count.add(list.length);
+        }
+        return count;
     }
 
     function getBalance() public view override returns (uint256) {
@@ -68,21 +128,10 @@ contract GamblingContractFactory is IGamblingContractFactory {
         uint8 _luckyCount
     ) external override onlyRoot returns (address) {
         require(
-            rights[_dealer].isAllow,
-            "Not allowed to apply for blind boxes, must pay"
+            isValidDealer(_dealer),
+            "Access to blind boxes is not allowed and must be paid or expired"
         );
-        if (rights[_dealer].payMode == 1) {
-            require(
-                block.timestamp - rights[_dealer].time < 31536000,
-                "The annual fee has expired"
-            );
-        }
-        if (rights[_dealer].payMode == 2) {
-            require(
-                block.timestamp - rights[_dealer].time < 2678400,
-                "Monthly fee has expired"
-            );
-        }
+        
         BlindBoxContract blindBox = new BlindBoxContract(
             root,
             _dealer,

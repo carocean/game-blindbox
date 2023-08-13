@@ -149,7 +149,12 @@
     padding: 0 15px;
     font-size: 12px;
 }
-
+.bb-details .bb-dls[isRunning] span{
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline-block;
+}
 .bb-ul {
     text-align: center;
     width: 100%;

@@ -2,6 +2,7 @@ const url = require('url');
 var Web3 = require("web3");
 var path = require('path');
 const contract = require("@truffle/contract");
+const { time } = require('console');
 
 const provider = new Web3.providers.WebsocketProvider('ws://127.0.0.1:8545');
 const web3 = new Web3(provider);
@@ -41,10 +42,10 @@ const _create = async function (dealer, luckyCount) {
                 {
                     type: 'bool',
                     name: 'isAllow',
-                },{
+                }, {
                     type: 'uint8',
                     name: 'payMode',
-                },{
+                }, {
                     type: 'uint',
                     name: 'time',
                 }
@@ -129,7 +130,7 @@ module.exports.details = async function (req, res) {
     var taxFunds = await instance.getTaxFunds();
     var income = await instance.getIncome();
     var benefitRate = await instance.getBenefitRate();
-
+    var isRunning = await instance.isRunning();
     var map = {
         root: root,
         dealer: dealer,
@@ -150,6 +151,7 @@ module.exports.details = async function (req, res) {
         brokerageFunds: web3.utils.fromWei(brokerageFunds, 'ether'),
         taxFunds: web3.utils.fromWei(taxFunds, 'ether'),
         income: web3.utils.fromWei(income, 'ether'),
+        isRunning: isRunning
     };
     res.end(JSON.stringify(map));
 }
@@ -194,6 +196,24 @@ module.exports.lottery = async function (req, res) {
     const instance = await BlindBoxContract.at(address);
     var result = await instance.lottery(parseInt(luckyNumber), nonce, { from: '0xEe7D375bcB50C26d52E1A4a472D8822A2A22d94F', });
     console.log(result);
+}
+module.exports.toggleRunning = async function (req, res) {
+    var abifile = path.resolve('./') + '/build/contracts/BlindBoxContract.json';
+    const contractArtifact = require(abifile); //produced by Truffle compile
+    const BlindBoxContract = contract(contractArtifact);
+    BlindBoxContract.setProvider(provider);
+
+    var uri = url.parse(req.url, true);
+    var dealer = uri.query['dealer'];
+    var address = uri.query['address'];
+    const instance = await BlindBoxContract.at(address);
+    var isRunning = await instance.isRunning();
+    // var _dealer = await instance.getDealer();
+    if (isRunning) {
+        await instance.stop({ from: dealer });
+    } else {
+        await instance.run({ from: dealer });
+    }
 }
 module.exports.onfeed = async function (req, res) {
     var abifile = path.resolve('./') + '/build/contracts/BlindBoxContract.json';
@@ -265,4 +285,16 @@ module.exports.getBalance = async function (req, res) {
     var instance = await _getFactoryContract();
     var balance = await instance.getBalance();
     res.end(web3.utils.fromWei(balance, 'ether') + "");
+}
+module.exports.withdraw = async function (req, res) {
+    var instance = await _getFactoryContract();
+    var root = await instance.root();
+    await instance.withdraw({ from: root });
+}
+module.exports.isValidDealer = async function (req, res) {
+    var instance = await _getFactoryContract();
+    var uri = url.parse(req.url, true);
+    var dealer = uri.query['dealer'];
+    var isValidDealer = await instance.isValidDealer(dealer);
+    res.end(isValidDealer + "");
 }

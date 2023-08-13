@@ -11,9 +11,23 @@ interface IGamblingContractFactory {
         uint8 _luckyCount
     ) external returns (address);
 
+    function getDealerCount() external returns (uint256);
+
+    function getBlindboxCount() external returns (uint256);
+
     function setAnnualFee(uint256 annualFee) external;
 
     function setMonthlyFee(uint256 monthlyFee) external;
+
+    function getApplyRights(
+        address dealer
+    ) external returns (ApplyRights memory);
+
+    function isPaidOfDealer(address dealer) external returns (bool);
+
+    function isValidDealer(address dealer) external returns (bool);
+
+    function isExpired(address dealer) external returns (bool, uint8);
 
     function getBalance() external returns (uint256);
 
