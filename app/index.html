@@ -21,6 +21,9 @@
         });
 
         $('div[wallet]>p[connector]').click(async function () {
+            if(typeof window.ethereum=="undefined"||window.ethereum==null){
+                alert('请安装metamask插件，在浏览器的插件市场搜：metamask而后安装');
+            }
             const web3 = new Web3(window.ethereum);
             // await window.ethereum.request({ method: "eth_requestAccounts" });
             const accounts = await web3.eth.getAccounts();

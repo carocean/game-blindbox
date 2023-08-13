@@ -120,6 +120,38 @@ contract BlindBoxContract is IBlindBox {
         return benefitRate;
     }
 
+    function setOdds(uint16 _odds) public override onlyDealer {
+        require(
+            state == BlindBoxState.folding,
+            "Can only be changed when folding"
+        );
+        odds = _odds;
+    }
+
+    function setKickbackRate(uint16 _kickbackRate) public override onlyDealer {
+        require(
+            state == BlindBoxState.folding,
+            "Can only be changed when folding"
+        );
+        kickbackRate = _kickbackRate;
+    }
+
+    function setKickbackAllocationRatio(
+        uint16 _brokerageRate,
+        uint16 _taxRate
+    ) public override onlyDealer {
+        require(
+            state == BlindBoxState.folding,
+            "Can only be changed when folding"
+        );
+        require(
+            _brokerageRate + _taxRate == 1,
+            "BrokerageRate plus TaxRate must be equal to 1"
+        );
+        brokerageRate = _brokerageRate;
+        taxRate = _taxRate;
+    }
+
     ///@dev Touchbox, the platform will bet on the lucky number and generate a hash. After the lottery, anyone can verify it through the publicly available hash algorithm in the contract
     function foldBlindBox(uint256 _hash) public override onlyRoot {
         require(state == BlindBoxState.lottered, "xx");

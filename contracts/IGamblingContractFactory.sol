@@ -11,11 +11,27 @@ interface IGamblingContractFactory {
         uint8 _luckyCount
     ) external returns (address);
 
+    function setAnnualFee(uint256 annualFee) external;
+
+    function setMonthlyFee(uint256 monthlyFee) external;
+
+    function getBalance() external returns (uint256);
+
+    function getAddress() external returns (address);
+
+    function getAnnualFee() external returns (uint256);
+
+    function getMonthlyFee() external returns (uint256);
+
     function enumDealer() external returns (address[] memory);
 
     function listContractOfDealer(
         address dealer
     ) external returns (address[] memory);
+
+    function withdraw() external payable;
+
+    function recMothlyFee() external payable;
 
     event OnCreateGamblingContract(CreateGamblingContractMessage e);
 }
@@ -25,4 +41,10 @@ struct CreateGamblingContractMessage {
     address root;
     address dealer;
     uint8 luckyCount;
+    ApplyRights rights;
+}
+struct ApplyRights {
+    bool isAllow;
+    uint8 payMode; //1:annualFee;2:monthlyFee
+    uint time;
 }

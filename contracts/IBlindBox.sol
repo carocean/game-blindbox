@@ -28,6 +28,15 @@ interface IBlindBox {
 
     function getBenefitRate() external returns (uint16);
 
+    function setOdds(uint16 odds) external;
+
+    function setKickbackRate(uint16 kickbackRate) external;
+
+    function setKickbackAllocationRatio(
+        uint16 brokerageRate,
+        uint16 taxRate
+    ) external;
+
     function foldBlindBox(uint256 _hash) external;
 
     function placeBet(

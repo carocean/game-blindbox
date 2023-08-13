@@ -34,6 +34,21 @@ const _create = async function (dealer, luckyCount) {
         }, {
             type: 'uint8',
             name: 'luckyCount'
+        }, {
+            type: 'ApplyRights',
+            name: 'rights',
+            components: [
+                {
+                    type: 'bool',
+                    name: 'isAllow',
+                },{
+                    type: 'uint8',
+                    name: 'payMode',
+                },{
+                    type: 'uint',
+                    name: 'time',
+                }
+            ]
         }],
             data,
             topics
@@ -125,16 +140,16 @@ module.exports.details = async function (req, res) {
         blindHash: blindHash,
         betHash: betHash,
         odds: parseInt(odds),
-        kickbackRate:parseInt(kickbackRate),
+        kickbackRate: parseInt(kickbackRate),
         brokerageRate: parseInt(brokerageRate),
         taxRate: parseInt(taxRate),
-        benefitRate:parseInt(benefitRate),
-        betFunds:web3.utils.fromWei(betFunds, 'ether'),
-        bonus:web3.utils.fromWei(bonus, 'ether'),
-        kickbackFunds:web3.utils.fromWei(kickbackFunds, 'ether'),
-        brokerageFunds:web3.utils.fromWei(brokerageFunds, 'ether'),
-        taxFunds:web3.utils.fromWei(taxFunds, 'ether'),
-        income:web3.utils.fromWei(income, 'ether'),
+        benefitRate: parseInt(benefitRate),
+        betFunds: web3.utils.fromWei(betFunds, 'ether'),
+        bonus: web3.utils.fromWei(bonus, 'ether'),
+        kickbackFunds: web3.utils.fromWei(kickbackFunds, 'ether'),
+        brokerageFunds: web3.utils.fromWei(brokerageFunds, 'ether'),
+        taxFunds: web3.utils.fromWei(taxFunds, 'ether'),
+        income: web3.utils.fromWei(income, 'ether'),
     };
     res.end(JSON.stringify(map));
 }
@@ -189,7 +204,7 @@ module.exports.onfeed = async function (req, res) {
     var uri = url.parse(req.url, true);
     var address = uri.query['address'];
     const instance = await BlindBoxContract.at(address);
-    instance.BetEvent(function(error,msg){
+    instance.BetEvent(function (error, msg) {
         var raw = msg.raw;
         var data = raw.data;
         var topics = raw.topics;
@@ -208,7 +223,7 @@ module.exports.onfeed = async function (req, res) {
         }, {
             type: 'uint256',
             name: 'balance'
-        },, {
+        }, , {
             type: 'uint256',
             name: 'betFunds'
         }, {
@@ -221,4 +236,33 @@ module.exports.onfeed = async function (req, res) {
         console.log('--------');
         console.log(zz);
     })
+}
+module.exports.getFeeInfo = async function (req, res) {
+    var instance = await _getFactoryContract();
+
+    var uri = url.parse(req.url, true);
+    var payMode = uri.query['payMode'];
+    var intPayMode = parseInt(payMode);
+    var address = instance.address;
+    var annualFee = await instance.getAnnualFee();
+    var monthlyFee = await instance.getMonthlyFee();
+    switch (intPayMode) {
+        case 1:
+            res.end(JSON.stringify({
+                address: address,
+                fee: web3.utils.fromWei(annualFee, 'ether')
+            }));
+            break;
+        case 2:
+            res.end(JSON.stringify({
+                address: address,
+                fee: web3.utils.fromWei(monthlyFee, 'ether')
+            }));
+            break;
+    }
+}
+module.exports.getBalance = async function (req, res) {
+    var instance = await _getFactoryContract();
+    var balance = await instance.getBalance();
+    res.end(web3.utils.fromWei(balance, 'ether') + "");
 }

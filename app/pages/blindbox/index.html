@@ -1,11 +1,26 @@
 <div class="blindbox">
+    <div class="bb-factory">
+        <ul>
+            <li balance>合约工厂余额：<span>...</span>ETH</li>
+            <li withdraw><a>提现</a></li>
+        </ul>
+    </div>
     <div class="bb-create">
         <ul class="bb-form">
-            <li selector><select name="account-selector">
+            <!-- <li selector><select name="account-selector">
                     <option value=""></option>
-                </select></li>
+                </select></li> -->
+            <ul class="bb-pay">
+                <li><input type="radio" id="annualFee" name="payMode" value="1" checked />
+                    <label for="annualFee">年费</label>
+                </li>
+                <li><input type="radio" id="monthlyFee" name="payMode" value="2" />
+                    <label for="monthlyFee">月费</label>
+                </li>
+            </ul>
+            <li amount><span>3</span>eth</li>
             <li lucky><input placeholder="输入盲盒幸运数个数"></li>
-            <li req><a href='#'>申请创建盲盒</a></li>
+            <li req><a style="cursor: pointer;text-decoration: underline;">申请创建盲盒</a></li>
         </ul>
         <ul class="bb-details"></ul>
     </div>
@@ -20,7 +35,7 @@
                     <option value="@@">未选择</option>
                 </select>
             </li>
-            <li class="bb-view"><a href="#">查看</a></li>
+            <li class="bb-view"><a style="cursor: pointer;text-decoration: underline;">查看</a></li>
         </ul>
         <ul class="bb-panel" style="display: none;">
             <li>
@@ -92,20 +107,20 @@
                 </ul>
             </li>
             <li>
-                <p class="bb-feed"><a href="#">饲喂</a></p>
+                <p class="bb-feed"><a style="cursor: pointer;">饲喂</a></p>
                 <ul class="bb-input">
                     <li luckyNumber><input placeholder="输入幸运号"></li>
                     <li nonce><input placeholder="输入nonce"></li>
                 </ul>
                 <ul class="bb-ul">
                     <li class="bb-li" foldBlindBox>
-                        <a href="#" button>扪盒</a>
+                        <a button>扪盒</a>
                     </li>
                     <li class="bb-li" placeBet>
-                        <a href="#" button>下注</a>
+                        <a button>下注</a>
                     </li>
                     <li class="bb-li" lottery>
-                        <a href="#" button>开奖</a>
+                        <a button>开奖</a>
                     </li>
                 </ul>
             </li>
@@ -118,8 +133,8 @@
                 <option>选择付款账户</option>
             </select>
             <ul ops>
-                <li yes><a href="#">确认支付</a></li>
-                <li no><a href="#">取消支付</a></li>
+                <li yes><a>确认支付</a></li>
+                <li no><a>取消支付</a></li>
             </ul>
             <p tips><span></span></p>
         </div>
@@ -133,37 +148,128 @@
     $(document).ready(async function () {
         const web3 = new Web3(window.ethereum);
 
-        var currentAccount;
-        var accounts = await web3.eth.requestAccounts();
-        var selector = $('.bb-form li[selector] select');
-        selector.empty();
-        for (var i = 0; i < accounts.length; i++) {
-            var a = accounts[i];
-            if (i == 0) {
-                currentAccount = a;
-            }
-            selector.append("<option value='" + a + "'>" + a + "</option>");
-        }
 
-        selector.change(async function () {
-            var val = $(this).val();
-            currentAccount = val;
-        });
-
-        $('.bb-form li[req] a').click(function () {
-            var val = $('.bb-form li[lucky] input').val();
-            if (val == '' || typeof val == 'undefined') {
-                alert('空');
+        $('.bb-form li[req] a').click(async function () {
+            var luckyCount = $('.bb-form li[lucky] input').val();
+            if (luckyCount == '' || typeof luckyCount == 'undefined') {
+                alert('幸运数字为空');
+                return;
             }
-            $.get('/api/blindbox.create', { dealer: currentAccount, luckyCount: val }, function (data) {
+            var fee = $('.bb-form li[amount]').attr('amount');
+            if (typeof fee == "undefined" || fee == '') {
+                alert('费用为空');
+                return;
+            }
+            var contractAddress = $('.bb-form li[amount]').attr('contractAddress');
+            if (typeof contractAddress == "undefined" || contractAddress == '') {
+                alert('合约地址为空');
+                return;
+            }
+            var payMode = $('.bb-pay input[name="payMode"]:checked').val();
+            $('.mask .dialog p[amount]').attr('amount', fee);
+            $('.mask .dialog p[amount]').attr('contractAddress', contractAddress);
+            $('.mask .dialog p[amount]').attr('payMode', payMode);
+            $('.mask .dialog p[amount] span').html(fee);
+            $('.mask .dialog p[luckyCount]').remove();
+            $('.mask .dialog').prepend("<p luckyCount='" + luckyCount + "'>幸运数字个数:<span>" + luckyCount + "</span></p>");
+            const accounts = await web3.eth.requestAccounts();
+            var selectE = $('.mask .dialog select');
+            selectE.empty();
+            selectE.append("<option value='@@'>选择付款账户</option>");
+            for (var i = 0; i < accounts.length; i++) {
+                var account = accounts[i];
+                selectE.append("<option value='" + account + "'>" + account + "</option>");
+            }
+            $('.mask .dialog p[tips] span').empty();
+            $('.mask').attr('itfor', 'create');
+            $('.mask').show();
+
+        })
+        $('.blindbox').undelegate('.mask[itfor="create"] .dialog ul[ops] li[yes]', 'click');
+        $('.blindbox').delegate('.mask[itfor="create"] .dialog ul[ops] li[yes]', 'click', async function () {
+            var amount = $('.mask .dialog p[amount]').attr('amount');
+            if (typeof amount == "undefined" || amount == '') {
+                alert('金额为空');
+                return;
+            }
+            var contractAddress = $('.mask .dialog p[amount]').attr('contractAddress');
+            if (typeof contractAddress == "undefined" || contractAddress == '') {
+                alert('合约地址为空');
+                return;
+            }
+            var payMode = $('.mask .dialog p[amount]').attr('payMode');
+            if (typeof payMode == "undefined" || payMode == '') {
+                alert('付款方式为空');
+                return;
+            }
+            var dealer = $('.mask .dialog select').val();
+            if ('@@' == dealer) {
+                return;
+            }
+            const amountWei = web3.utils.toWei(amount, "ether");
+            const transaction = {
+                from: dealer,
+                to: contractAddress,
+                value: amountWei,
+                // nonce: Math.floor((Math.random()*100000)+1)
+            };
+            switch (payMode) {
+                case '1':
+                    break;
+                case '2':
+                    transaction.data = web3.eth.abi.encodeFunctionSignature('recMothlyFee()');
+                    break;
+            }
+            // Send the transaction
+            var result;
+            try {
+                result = await web3.eth.sendTransaction(transaction);
+            } catch (err) {
+                // Handle error
+                $('.mask .dialog p[tips] span').html(err);
+                console.error("Failed to send transaction:", err);// Update status
+                return;
+            }
+            $('.mask').hide();
+            refreshBalance();
+            var luckyCount = $('.mask .dialog p[luckyCount]').attr('luckyCount');
+            if (typeof luckyCount == "undefined" || luckyCount == '') {
+                alert('幸运数字为空');
+                return;
+            }
+            $.get('/api/blindbox.create', { dealer: dealer, luckyCount: luckyCount }, function (data) {
                 var obj = JSON.parse(data);
                 $('.bb-create .bb-details').append("<li>" + obj.contractAddress + "</li>");
                 $('.bb-dealer select').empty();
                 $('.bb-dealer select').append('<option value="@@">未选择</option>');
                 refreshDealerList();
             });
+        });
+        function refreshBalance() {
+            $.get('/api/blindbox.getBalance', {}, function (data) {
+                console.log(data);
+                $('.bb-factory li[balance] span').html(data);
+            });
+        }
+        refreshBalance();
+        function refreshPayPanel() {
+            var payMode = $('.bb-pay input[name="payMode"]:checked').val();
+            if (typeof payMode == "undefined" || payMode == '') {
+                return;
+            }
+            $('.bb-form li[amount] span').html('...');
+            $.get('/api/blindbox.getFeeInfo', { payMode: payMode }, function (data) {
+                console.log(data);
+                var obj = JSON.parse(data);
+                $('.bb-form li[amount] span').html(obj.fee + '');
+                $('.bb-form li[amount]').attr('amount', obj.fee + '');
+                $('.bb-form li[amount]').attr('contractAddress', obj.address + '');
+            });
+        }
+        refreshPayPanel();
+        $('.bb-pay input[name="payMode"]').change(function () {
+            refreshPayPanel();
         })
-
         function refreshDealerList() {
             $.get('/api/blindbox.dealers', {}, function (data) {
                 console.log(data);
@@ -296,13 +402,15 @@
                 selectE.append("<option value='" + account + "'>" + account + "</option>");
             }
             $('.mask .dialog p[tips] span').empty();
-            $('.mask').toggle();
+            $('.mask').attr('itfor', 'bet');
+            $('.mask').show();
 
         });
         $('.mask .dialog ul[ops] li[no]').click(function () {
-            $('.mask').toggle();
-        })
-        $('.mask .dialog ul[ops] li[yes]').click(async function () {
+            $('.mask').hide();
+        });
+        $('.blindbox').undelegate('.mask[itfor="bet"] .dialog ul[ops] li[yes]', 'click');
+        $('.blindbox').delegate('.mask[itfor="bet"] .dialog ul[ops] li[yes]', 'click', async function () {
             var betFunds = $('.bb-details li[betFunds]').attr('betFunds');
             var address = $('.bb-contract select').val();
             if ('@@' == address) {
@@ -344,8 +452,8 @@
                 $('.mask').hide();
                 refreshDetails();
             })
-
         });
+
         $('.bb-ul li[lottery] a').click(function () {
             var address = $('.bb-contract select').val();
             if ('@@' == address) {
@@ -376,7 +484,7 @@
                     from: dealer,
                     to: address,
                     value: amountWei,
-                    data:web3.eth.abi.encodeFunctionSignature('feed()')
+                    data: web3.eth.abi.encodeFunctionSignature('feed()')
                     // nonce: Math.floor((Math.random()*100000)+1)
                 };
                 // Send the transaction
