@@ -25,3 +25,4 @@
 
  > [Test address:http://localhost:8080](http://localhost:8080)  
  > Click on "Blind Box Contract Testing" on the page to enter the blind box testing page.
+ > ...
