@@ -162,9 +162,13 @@ module.exports.foldBlindBox = async function (req, res) {
     BlindBoxContract.setProvider(provider);
 
     var uri = url.parse(req.url, true);
-    var blindHash = uri.query['blindHash'];
+    var luckyNumber = uri.query['luckyNumber'];
+    var nonce = uri.query['nonce'];
     var address = uri.query['address'];
     const instance = await BlindBoxContract.at(address);
+    //web3.utils.soliditySha3等同于合约中的一对：keccak256(abi.encodePacked(number))
+    var blindHash = web3.utils.soliditySha3(new web3.utils.BN(luckyNumber), nonce);
+
     var result = await instance.foldBlindBox(blindHash, { from: '0xEe7D375bcB50C26d52E1A4a472D8822A2A22d94F' });
     console.log(result);
 }

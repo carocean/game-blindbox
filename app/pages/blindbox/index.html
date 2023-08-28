@@ -380,7 +380,7 @@
                 ul.find('li[brokerageFunds] span').html(obj.brokerageFunds);
                 ul.find('li[taxFunds] span').html(obj.taxFunds);
                 ul.find('li[income] span').html(obj.income);
-                ul.find('li[isRunning] span').html(obj.isRunning?'正在运行':'已停止');
+                ul.find('li[isRunning] span').html(obj.isRunning ? '正在运行' : '已停止');
 
                 var op = $('.bb-ul');
                 switch (obj.state) {
@@ -399,7 +399,7 @@
                 }
             });
         }
-        $('.bb-details .bb-dls[isRunning] span').click(function(){
+        $('.bb-details .bb-dls[isRunning] span').click(function () {
             var dealer = $('.bb-dealer select').val();
             var address = $('.bb-contract select').val();
             if ('@@' == address) {
@@ -419,8 +419,8 @@
             if (luckyNumber == '' || nonce == '') {
                 alert('空');
             }
-            var blindHash = web3.utils.sha3(web3.utils.toHex(luckyNumber + '') + nonce, { encoding: "hex" });
-            $.get('/api/blindbox.foldBlindBox', { address: address, blindHash: blindHash }, function (data) {
+            
+            $.get('/api/blindbox.foldBlindBox', { address: address, luckyNumber: luckyNumber, nonce:nonce}, function (data) {
                 refreshDetails();
             })
         })
