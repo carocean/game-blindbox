@@ -17,7 +17,7 @@
   Security: The blind box platform is betting a lucky number and generating a hash.
   After the lottery, players and operators can verify that the platform has not cheated by verifying the hash. Similarly,
   players will also generate a hash of the guessed lucky number after placing a bet,
-  so It is fair and transparent to platforms, operators, and players.
+  so It is fair and transparent to platforms, operators, and players. 
  ```
 
  ## usage
